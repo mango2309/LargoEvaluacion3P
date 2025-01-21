@@ -9,7 +9,7 @@
 
     <TabBar>
         <Tab Title="Buscar Película" Icon="search_icon.png">
-            <ShellContent ContentTemplate="{DataTemplate views:BuscarPeliculaSLPage}" />
+            <ShellContent ContentTemplate="{DataTemplate views:BuscarPeliculasSLPage}" />
         </Tab>
 
         <Tab Title="Listado Peliculas" Icon="other_icon.png">

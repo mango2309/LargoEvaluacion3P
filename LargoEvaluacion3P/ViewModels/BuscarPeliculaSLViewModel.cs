@@ -12,9 +12,9 @@ namespace LargoEvaluacion3P.ViewModels
     public class BuscarPeliculaSLViewModel : BaseSLViewModel
     {
         private readonly PeliculaSLService _peliculaService;
-        private string _query = string.Empty;
+        private string _query;
         private PeliculaSL? _peliculaEncontrada;
-        private string _mensajeError = string.Empty;
+        private string _mensajeError;
 
         public BuscarPeliculaSLViewModel()
         {
@@ -25,7 +25,13 @@ namespace LargoEvaluacion3P.ViewModels
         public string Query
         {
             get => _query;
-            set => SetProperty(ref _query, value);
+            set
+            {
+                if (SetProperty(ref _query, value))
+                {
+                    OnPropertyChanged(nameof(TieneError));
+                }
+            }
         }
 
         public PeliculaSL? PeliculaEncontrada
@@ -37,8 +43,16 @@ namespace LargoEvaluacion3P.ViewModels
         public string MensajeError
         {
             get => _mensajeError;
-            set => SetProperty(ref _mensajeError, value);
+            set
+            {
+                if (SetProperty(ref _mensajeError, value))
+                {
+                    OnPropertyChanged(nameof(TieneError));
+                }
+            }
         }
+
+        public bool TieneError => !string.IsNullOrWhiteSpace(MensajeError);
 
         public ICommand BuscarCommand { get; }
 
@@ -53,21 +67,14 @@ namespace LargoEvaluacion3P.ViewModels
                 return;
             }
 
-            try
+            var pelicula = await _peliculaService.BuscarPeliculaAsync(Query);
+            if (pelicula != null)
             {
-                var pelicula = await _peliculaService.BuscarPeliculaAsync(Query);
-                if (pelicula != null)
-                {
-                    PeliculaEncontrada = pelicula;
-                }
-                else
-                {
-                    MensajeError = "No se encontró ninguna película con ese nombre.";
-                }
+                PeliculaEncontrada = pelicula;
             }
-            catch
+            else
             {
-                MensajeError = "Ocurrió un error al buscar la película. Inténtalo nuevamente.";
+                MensajeError = "No se encontró ninguna película con ese nombre.";
             }
         }
     }

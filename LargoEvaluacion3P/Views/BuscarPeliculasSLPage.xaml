@@ -4,7 +4,7 @@
              xmlns:viewModels="clr-namespace:LargoEvaluacion3P.ViewModels"
              x:Class="LargoEvaluacion3P.Views.BuscarPeliculasSLPage"
              Title="BuscarPeliculasSLPage">
-    
+
     <ContentPage.BindingContext>
         <viewModels:BuscarPeliculaSLViewModel />
     </ContentPage.BindingContext>
@@ -18,7 +18,7 @@
 
             <Label Text="{Binding MensajeError}"
                    TextColor="Red"
-                   IsVisible="{Binding MensajeError, Converter={StaticResource StringNotEmptyConverter}}" />
+                   IsVisible="{Binding TieneError}" />
 
             <StackLayout IsVisible="{Binding PeliculaEncontrada}">
                 <Label Text="Detalles de la Película" FontAttributes="Bold" />
