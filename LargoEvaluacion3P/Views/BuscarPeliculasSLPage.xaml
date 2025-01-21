@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:LargoEvaluacion3P.ViewModels"
              x:Class="LargoEvaluacion3P.Views.BuscarPeliculasSLPage"
              Title="BuscarPeliculasSLPage">
+    
     <ContentPage.BindingContext>
         <viewModels:BuscarPeliculaSLViewModel />
     </ContentPage.BindingContext>
