@@ -10,25 +10,54 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <VerticalStackLayout Padding="20">
-            <Entry Placeholder="Escribe el nombre de la película"
-                   Text="{Binding Query}" />
-            <Button Text="Buscar"
-                    Command="{Binding BuscarCommand}" />
+       <VerticalStackLayout Padding="20" Spacing="15">
+          
+           <Entry Placeholder="Escribe el nombre de la película"
+                  Text="{Binding Query}" />
+           
+           <Button Text="Buscar"
+                   Command="{Binding BuscarPeliculaCommand}" />
 
             <Label Text="{Binding MensajeError}"
                    TextColor="Red"
-                   IsVisible="{Binding TieneError}" />
+                   FontAttributes="Italic"
+                   IsVisible="{Binding HayError}" />
 
-            <StackLayout IsVisible="{Binding PeliculaEncontrada}">
-                <Label Text="Detalles de la Película" FontAttributes="Bold" />
-                <Label Text="{Binding PeliculaEncontrada.Nombre}" />
-                <Label Text="{Binding PeliculaEncontrada.Director}" />
-                <Label Text="{Binding PeliculaEncontrada.Genero}" />
-                <Label Text="{Binding PeliculaEncontrada.Year}" />
-                <Image Source="{Binding PeliculaEncontrada.PosterUrl}" 
-                       Aspect="AspectFit" />
-            </StackLayout>
-        </VerticalStackLayout>
+            <ScrollView IsVisible="{Binding HayPelicula}">
+               <VerticalStackLayout>
+                   <Label Text="Detalles de la Película" 
+                          FontAttributes="Bold" 
+                          HorizontalOptions="Center"
+                          FontSize="16"/>
+
+                   <Label Text="Nombre:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Nombre}" />
+
+                   <Label Text="Género:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Genero}" />
+
+                   <Label Text="Director:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Director}" />
+
+                   <Label Text="Año:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Year}" />
+
+                   <Image Source="{Binding PeliculaEncontrada.PosterUrl}" 
+                        Aspect="AspectFit" 
+                        HeightRequest="300" 
+                        Margin="0,10" />
+
+                   <Label Text="Sinopsis:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Sinopsis}" />
+
+                   <Label Text="Actores:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Actores}" />
+
+                   <Label Text="Rating:" FontAttributes="Bold" />
+                   <Label Text="{Binding PeliculaEncontrada.Rating}" />
+
+               </VerticalStackLayout>
+           </ScrollView>
+       </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>

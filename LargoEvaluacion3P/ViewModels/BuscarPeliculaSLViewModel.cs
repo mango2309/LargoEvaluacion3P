@@ -1,81 +1,144 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using LargoEvaluacion3P.Models;
 using LargoEvaluacion3P.Services;
+using Newtonsoft.Json;
 
 namespace LargoEvaluacion3P.ViewModels
 {
-    public class BuscarPeliculaSLViewModel : BaseSLViewModel
+    public class BuscarPeliculaSLViewModel : INotifyPropertyChanged
     {
-        private readonly PeliculaSLService _peliculaService;
         private string _query;
-        private PeliculaSL? _peliculaEncontrada;
+        private PeliculaSL _peliculaEncontrada;
         private string _mensajeError;
 
-        public BuscarPeliculaSLViewModel()
-        {
-            _peliculaService = new PeliculaSLService();
-            BuscarCommand = new Command(async () => await BuscarPeliculaAsync());
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Query
         {
             get => _query;
             set
             {
-                if (SetProperty(ref _query, value))
+                if (_query != value)
                 {
-                    OnPropertyChanged(nameof(TieneError));
+                    _query = value;
+                    OnPropertyChanged();
                 }
             }
         }
-
-        public PeliculaSL? PeliculaEncontrada
+        public PeliculaSL PeliculaEncontrada
         {
             get => _peliculaEncontrada;
-            set => SetProperty(ref _peliculaEncontrada, value);
+            set
+            {
+                if (_peliculaEncontrada != value)
+                {
+                    _peliculaEncontrada = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(HayPelicula));
+                }
+            }
         }
-
         public string MensajeError
         {
             get => _mensajeError;
             set
             {
-                if (SetProperty(ref _mensajeError, value))
+                if (_mensajeError != value)
                 {
-                    OnPropertyChanged(nameof(TieneError));
+                    _mensajeError = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(HayError));
                 }
             }
         }
-
-        public bool TieneError => !string.IsNullOrWhiteSpace(MensajeError);
-
-        public ICommand BuscarCommand { get; }
-
-        private async Task BuscarPeliculaAsync()
+        private bool _hayError;
+        public bool HayError
         {
-            MensajeError = string.Empty;
-            PeliculaEncontrada = null;
+            get => _hayError;
+            set
+            {
+                _hayError = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private bool _hayPelicula;
+        public bool HayPelicula
+        {
+            get => _hayPelicula;
+            set
+            {
+                _hayPelicula = value;
+                OnPropertyChanged();
+            }
+        }
+        public Command BuscarPeliculaCommand { get; }
+        public ICommand BuscarCommand { get; }
+        public BuscarPeliculaSLViewModel()
+        {
+            BuscarPeliculaCommand = new Command(async () => await BuscarPeliculaAsync());
+        }
+
+        public async Task BuscarPeliculaAsync()
+        {
             if (string.IsNullOrWhiteSpace(Query))
             {
-                MensajeError = "Por favor, ingresa un nombre para buscar.";
+                MensajeError = "Por favor, ingresa el nombre de una película.";
+                HayError = true;
+                HayPelicula = false;
                 return;
             }
 
-            var pelicula = await _peliculaService.BuscarPeliculaAsync(Query);
-            if (pelicula != null)
+            try
             {
-                PeliculaEncontrada = pelicula;
+                using var httpClient = new HttpClient();
+                var response = await httpClient.GetStringAsync("https://www.freetestapi.com/api/v1/movies?title=The%20Shawshank%20Redemption");
+                Console.WriteLine(response);
+                var peliculas = JsonConvert.DeserializeObject<List<PeliculaSL>>(response);
+
+                if (peliculas == null || peliculas.Count == 0)
+                {
+                    MensajeError = "No se han encontrado películas en la base de datos.";
+                    HayError = true;
+                    HayPelicula = false;
+                    return;
+                }
+
+                var peliculaEncontrada = peliculas.FirstOrDefault(p =>
+                    p.Nombre.Equals(Query, StringComparison.OrdinalIgnoreCase));
+
+                if (peliculaEncontrada != null)
+                {
+                    PeliculaEncontrada = peliculaEncontrada;
+                    HayError = false;
+                    HayPelicula = true;
+                }
+                else
+                {
+                    MensajeError = "No se encontró ninguna película con ese nombre.";
+                    HayError = true;
+                    HayPelicula = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MensajeError = "No se encontró ninguna película con ese nombre.";
+                MensajeError = $"Error al buscar la película: {ex.Message}";
+                HayError = true;
+                HayPelicula = false;
             }
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
