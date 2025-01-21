@@ -7,9 +7,14 @@
     Shell.FlyoutBehavior="Disabled"
     Title="LargoEvaluacion3P">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Buscar Película" Icon="search_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:BuscarPeliculaSLPage}" />
+        </Tab>
+
+        <Tab Title="Listado Peliculas" Icon="other_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:ListadoPeliculasSLPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>

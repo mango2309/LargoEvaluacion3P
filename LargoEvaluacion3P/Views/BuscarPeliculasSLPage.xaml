@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:LargoEvaluacion3P.ViewModels"
+             x:Class="LargoEvaluacion3P.Views.BuscarPeliculasSLPage"
+             Title="BuscarPeliculasSLPage">
+    <ContentPage.BindingContext>
+        <viewModels:BuscarPeliculaSLViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <VerticalStackLayout Padding="20">
+            <Entry Placeholder="Escribe el nombre de la película"
+                   Text="{Binding Query}" />
+            <Button Text="Buscar"
+                    Command="{Binding BuscarCommand}" />
+
+            <Label Text="{Binding MensajeError}"
+                   TextColor="Red"
+                   IsVisible="{Binding MensajeError, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <StackLayout IsVisible="{Binding PeliculaEncontrada}">
+                <Label Text="Detalles de la Película" FontAttributes="Bold" />
+                <Label Text="{Binding PeliculaEncontrada.Nombre}" />
+                <Label Text="{Binding PeliculaEncontrada.Director}" />
+                <Label Text="{Binding PeliculaEncontrada.Genero}" />
+                <Label Text="{Binding PeliculaEncontrada.Year}" />
+                <Image Source="{Binding PeliculaEncontrada.PosterUrl}" 
+                       Aspect="AspectFit" />
+            </StackLayout>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
