@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:LargoEvaluacion3P.ViewModels"
              x:Class="LargoEvaluacion3P.Views.BuscarPeliculasSLPage"
-             Title="BuscarPeliculasSLPage">
+             Title="Buscar Peliculas Sebastian Largo">
 
     <ContentPage.BindingContext>
         <viewModels:BuscarPeliculaSLViewModel />
@@ -17,6 +17,9 @@
            
            <Button Text="Buscar"
                    Command="{Binding BuscarPeliculaCommand}" />
+
+            <Button Text="Limpiar"
+                   Command="{Binding LimpiarQueryCommand}" />
 
             <Label Text="{Binding MensajeError}"
                    TextColor="Red"

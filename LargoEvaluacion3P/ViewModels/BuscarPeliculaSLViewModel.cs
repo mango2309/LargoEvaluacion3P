@@ -82,9 +82,19 @@ namespace LargoEvaluacion3P.ViewModels
         }
         public Command BuscarPeliculaCommand { get; }
         public ICommand BuscarCommand { get; }
+
+        public ICommand LimpiarQueryCommand { get; }
+        private void LimpiarQuery()
+        {
+            Query = string.Empty;
+            MensajeError = string.Empty;
+            HayError = false;
+            HayPelicula = false;
+        }
         public BuscarPeliculaSLViewModel()
         {
             BuscarPeliculaCommand = new Command(async () => await BuscarPeliculaAsync());
+            LimpiarQueryCommand = new Command(LimpiarQuery);
         }
 
         public async Task BuscarPeliculaAsync()
